@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" />
+</head>
+<body>
+  <h1>Weather Search</h1>
+
+  <div class="list-group">
+    <button type="button" class="col-3 list-group-item list-group-item-action active">
+      Cras justo odio
+    </button>
+
+  <form id="city-search">
+    <label for="city-input">Search for a City:</label>
+      <input type="text" id="city-input"><br>
+
+      <!-- This button will trigger our AJAX call -->
+      <input id="find-city" type="submit" value="Find Your City">
+  </form>
+
+      <!-- put JSON contents here -->
+  <div id="city-view"></div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">  
+
+// .on("click") function will trigger AJAX call
+$("#find-city").on("click", function(e){
+  e.preventDefault();
+  var city = $("#city-input").val();
+  var queryURL = " https://api.openweathermap.org/data/2.5/forecast/daily?q=" + city + "&cnt=5&appid=166a433c57516f51dfab1f7edaed8413";
+
+  $.ajax({
+    url: queryURL,
+    method: "GET"
+  }).then(function(response) {
+    console.log(response);
+    $("#city-view").text(JSON.stringify(response));
+  });
+})
+  // initial array of cities
+  var cityStateArr = ["Denver,CO", "SantaFe,NM", "Tampa,FL", "NewYork,NY", "Seattle,WA"];
+  
+// create buttons for items in array
+function renderButtons(){
+  $(".list-group-item").empty();
+  for(var i=0; i<cityStateArr.length; i++){
+    var a = $("<button>");
+      a.addClass("city");
+      a.attr("data-city", cityStateArr[i]);
+      a.text(cityStateArr[i]);
+      $(".list-group").append(a);
+  }
+}
+
+// add onclick
+$("#find-city").on("click", function(e){
+  e.preventDefault();
+  var city = $("#city-input").val().trim();
+  cityStateArr.push(city);
+  renderButtons();
+});
+
+function getCityData(){
+  console.log($(this).text());
+  var cityName = $(this).text().replace(/ /g, "+");
+  console.log(cityName);
+  var queryURL = " https://api.openweathermap.org/data/2.5/forecast/daily?q=" + cityName + "&cnt=5&appid=166a433c57516f51dfab1f7edaed8413";
+  $.ajax({
+    url: queryURL,
+    method: "GET"
+      // telling the code what name we want to call the object we will refer to when we get the results
+    }).then(function(response) {
+        console.log(response);
+        console.log(cityName);
+
+        $(".list-group-item").empty();
+
+        // create new div
+        // city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
+        // city name
+    var cityTag = $("<h1>").text(response.city.name);
+      //date
+    var dateTag = $("<h3>").text(response.list.array[0].dt);
+      //find icon representing weather cond (different API?)
+    var imgTag = $("<img>").attr("src", response.list.array[0].array[0].icon);
+      //temp
+  var tempTag = $("<h3>").text(tempFar);
+    var tempKel = parseInt(response.list.array[0].temp.day) ; 
+    var tempFar = (tempKel-273.15) * 1.80 + 32;
+      console.log(tempFar);
+      //humidity
+    var humidityTag = $("<h3>").text(response.list.feels_like.humidity)
+      //wind speed
+    var windSpeedTag = $("<h3>").text(response.list.feels_like.speed);
+      //uv index (add class here for styling)
+    // var uvIndexTag = $("<h3>").text(response.   );
+
+      $("#city-view").append(cityTag).append(dateTag).append(imgTag).append(tempTag).append(humidityTag).append(windSpeedTag).append(uvIndexTag);
+    
+
+    })}
+
+
+
+  </script>
+</body>
+</html>
+
+  <!-- a. Make sure you can retrieve data via the API for a city, both for the current day and a multi-day forecast (these may need to be two separate API calls)
+  b. Determine how you'll manage the list of cities to the left. When a user enters a city name, after the response is received from OpenWeather, the city name should be added to the list. Be sure to prevent duplicates. You'll need to store the city list in local storage as well, so get that process figured out.
+  c. When the user clicks on a city name, the API query should run again, just as if the user had typed the city in at the top. So maybe the city-typing and the city-clicking should both go to the same function for API lookup... ? 
+  d. Each block if the 5-day forecast is the same thing, just with different data. So think about that. -->
