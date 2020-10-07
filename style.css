@@ -1,0 +1,17 @@
+#city-input{
+    outline: 1px;
+
+}
+
+
+.card-body{
+    outline: solid 1px black;
+    background-color: lightgray;
+    height: 300px
+}
+
+li {
+    list-style-type: none;
+}
+
+
