@@ -20,12 +20,29 @@
         <li id="recent-search-btns"></li>
         </ul>
       </div>
-    <div class="card-body col-md-7">
-      <p class="card-text"></p>
+    <div class="card-body-today col-md-7">
+      <p class="card-text-today"></p>
     </div>
   </div>
-</div> 
-</div> 
+  <br>
+  <div class="row">
+  <div class="card-body-forecast col-md-2">
+      <p class="card-text"></p>
+      </div>
+  <div class="card-body-forecast col-md-2">
+      <p class="card-text"></p>
+      </div>
+  <div class="card-body-forecast col-md-2">
+      <p class="card-text"></p>
+      </div>
+  <div class="card-body-forecast col-md-2">
+      <p class="card-text"></p>
+      </div>
+  <div class="card-body-forecast col-md-2">
+      <p class="card-text"></p>
+      </div>
+</div>
+</div>
     
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
@@ -43,19 +60,19 @@ $("#find-city").on("click", function(e){
   cityArray.push(city);
   renderButtons();
   todayWeather(city);
-  forecast(city);
+  fiveDayForecast(city);
 });
 
 function renderButtons(){
-  $("#recent-search-btns").empty();
   for(var i=0; i<cityArray.length; i++){
     var a = $("<button>");
       a.addClass("city");
       a.attr("find-city", cityArray[i]);
       a.text(cityArray[i]);
       $("#recent-search-btns").append(a);
-  }
-};
+      // a.on("click", todayWeather();
+      
+}}
   
 function todayWeather(city){
   var city = $("#city-input").val();
@@ -67,15 +84,15 @@ function todayWeather(city){
     method: "GET"
   }).then(function(response) {
     console.log(response);
+    var dateTag = $("<h2>").text(response.name + ": " + new Date().toLocaleDateString());
 
     var tempTag = $("<p>").text(response.main.temp);
     var humidityTag = $("<p>").text(response.main.humidity);
       console.log(humidityTag);
     var windSpeedTag = $("<p>").text(response.wind.speed);
-    var dateTag = $("<p>").text(response.name + new Date().toLocaleDateString());
     var imgTag = $("<img>").attr("src", "http://openweathermap.org/img/w/" + response.weather[0].icon + ".png");
 
-    $(".card-body").append(tempTag, humidityTag, windSpeedTag, dateTag, imgTag);
+    $(".card-body-today").append(dateTag, imgTag, tempTag, humidityTag, windSpeedTag);
 
     // $(".list-group-item").empty();  
     var lat = response.coord.lat;
@@ -101,35 +118,51 @@ function uvIndex(lat, lon){
     } else {
       uvBtn.addClass("btn-danger");
     }
-    $(".card-body").append(uvTag.append(uvBtn));
+    $(".card-body-today").append(uvTag.append(uvBtn));
 
-    forecast(city);
+    fiveDayForecast(city);
   })
 };
 
   
-  function forecast(city){
+  function fiveDayForecast(city){
     var city = $("#city-input").val();
     console.log("yes");
-    var fiveDayURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=166a433c57516f51dfab1f7edaed8413";
+   
+    // var todayURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=f14b6a45063b423ef9b28d528efca1a9&units=imperial";
    
     $.ajax({
-    url: fiveDayURL,
+    url: "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=f14b6a45063b423ef9b28d528efca1a9&units=imperial",
+    method: "GET"
+    }).then(function(response) {
+    console.log(response);
+    // var fiveDayURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=166a433c57516f51dfab1f7edaed8413";
+   
+    var lat = response.coord.lat;
+    var lon = response.coord.lon;
+    // var tempTag = $("<p>").text("Current Temp: " + response.main.temp);
+
+    // var fiveDayURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minute,hourly,alerts&appid=166a433c57516f51dfab1f7edaed8413";
+
+    $.ajax({
+    url: "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minute,hourly,alerts&appid=166a433c57516f51dfab1f7edaed8413",
     method: "GET"
     }).then(function(response) {
     console.log(response);
 
-    response.list.forEach(function(day){
-      console.log(day)
-    for(var i = 0; i<response.list.length; i++){
-    var tempTag = $("<p>").text(response.list[i].main.temp);
-    var humidityTag = $("<p>").text(response.list[i].main.humidity);
-      console.log(humidityTag);
-    var windSpeedTag = $("<p>").text(response.list[i].wind.speed);
-    var dateTag = $("<p>").text(response.city.name + new Date().toLocaleDateString());
-    var imgTag = $("<img>").attr("src", "http://openweathermap.org/img/w/" + response.list[i].weather[0].icon + ".png");
 
-    $(".card-body").append(tempTag, humidityTag, windSpeedTag, dateTag, imgTag);
+    for(var i = 0; i<5; i++){
+    var dateMil = response.daily[i].dt * 1000;
+    var dateObject = new Date(dateMil);
+    var curDate = dateObject.toLocaleString(); 
+    var dateTag = $("<h3>").text(city + " " + curDate);
+    var tempF = (response.daily[i].temp.day - 273.15) * 1.80 + 32;
+    var tempTag = $("<h4>").text("Temp: " + tempF.toFixed(0));
+    // var imgTag = $("<img>").attr("src", "http://openweathermap.org/img/w/" + response.list[i].weather[0].icon + ".png");
+    // var humidityTag = $("<p>").text("Humidity: " + response.list[i].main.humidity);
+    // var windSpeedTag = $("<p>").text("Wind: " + response.list[i].wind.speed);
+    
+    $(".card-text").append(dateTag, tempTag);
     }
     // $(".list-group-item").empty();  
     // var lat = response.coord.lat;
@@ -142,6 +175,8 @@ function uvIndex(lat, lon){
 
 // // function recallSearch(e){
 // // e.preventDefault();
+// $("#recent-search-btns").empty();
+
 // localStorage.clear()
 // // }
 

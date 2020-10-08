@@ -4,9 +4,14 @@
 }
 
 
-.card-body{
+.card-body-today{
     outline: solid 1px black;
     background-color: lightgray;
+    height: 300px
+}
+.card-body-forecast{
+    outline: solid 1px black;
+    background-color: lightcyan;
     height: 300px
 }
 
