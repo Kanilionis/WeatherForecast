@@ -9,14 +9,31 @@
     background-color: lightgray;
     height: 300px
 }
-.card-body-forecast{
+/* .card-body-forecast{
     outline: solid 1px black;
     background-color: lightcyan;
     height: 300px
-}
+} */
 
 li {
     list-style-type: none;
 }
 
+
+.fiveDay {
+    box-sizing: content-box;
+    width: 100%;
+    height: auto;
+    float: left;
+    padding-top: 20px;
+}
+.fiveDayForecast {
+  outline: solid 1px black;
+  background-color: lightskyblue;
+  height: 200px;
+  width: 100%;
+  display: inline-block;
+  padding-left: 10px;
+  margin-left: 20px;
+}
 
