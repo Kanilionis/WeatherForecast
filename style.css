@@ -1,13 +1,47 @@
-#city-input{
-    outline: 1px;
+button{
+    padding-top: -3px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    text-align: center
+}
 
+.header{
+    margin-left: 110px;
+    margin-top: 20px;
+    font-size: 50px;
+}
+
+img{
+    height: 70px;
+    margin-top: -10px
+}
+
+#city-input{
+    padding-top: 5px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.card-text-today{
+    margin-top: 10px;
+    padding-top: 50px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    background-color: lightyellow;
+    height: 225px;
+    text-align: center;
 }
 
 
 .card-body-today{
-    outline: solid 1px black;
-    background-color: lightgray;
-    height: 300px
+    margin-top: 10px;
+    padding-top: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    background-color: lightyellow;
+    height: 225px;
+    text-align: center;
+
 }
 /* .card-body-forecast{
     outline: solid 1px black;
@@ -19,15 +53,28 @@ li {
     list-style-type: none;
 }
 
+.forecast{
+    background-color: lightskyblue;
+    height: 200px;
+    width: 180px;
+    display: inline-block;
+    padding-left: 10px;
+    margin-left: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    padding-top: 10px
+    
+}
 
-.fiveDay {
+/* .fiveDay {
     box-sizing: content-box;
     width: 100%;
     height: auto;
     float: left;
     padding-top: 20px;
-}
-.fiveDayForecast {
+} */
+/* .fiveDayForecast {
   outline: solid 1px black;
   background-color: lightskyblue;
   height: 200px;
@@ -35,5 +82,9 @@ li {
   display: inline-block;
   padding-left: 10px;
   margin-left: 20px;
+} */
+
+.col-md {
+  text-align: center;
 }
 

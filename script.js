@@ -2,10 +2,10 @@ $(document).ready(function(){
 
 
   var history = JSON.parse(localStorage.getItem("city"))||[];  
-  var city = $("#city-input").val().trim();
+ 
   
   $("#find-city").on("click", function(e){
-      e.preventDefault();
+    var city = $("#city-input").val().trim();
       $(".fiveDayForecast").empty();
     todayWeather(city);
     fiveDayForecast(city);
@@ -29,7 +29,7 @@ $(document).ready(function(){
   for (var i=0; i<history.length; i++){
     renderButtons(history[i])
   }
-    
+  var city = $("#city-input").val().trim();
   function todayWeather(city){
     var todayURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=f14b6a45063b423ef9b28d528efca1a9&units=imperial";
     
@@ -39,6 +39,7 @@ $(document).ready(function(){
       method: "GET"
     }).then(function(response) {
       $(".card-body-today").empty();
+      $(".card-text-today").empty();
       if(history.indexOf(city) === -1){
         history.push(city);
         // only going to store the city searched for one time!!
@@ -46,17 +47,20 @@ $(document).ready(function(){
         renderButtons(city);
       }
       console.log(response);
-      var dateTag = $("<h2>").text(response.name + ": " + new Date().toLocaleDateString());
-      var tempTag = $("<p>").text("TEMP:  " + response.main.temp.toFixed(0));
+      var cityToday = $("<h1>").text(response.name)
+      var dateTag = $("<h5>").text(new Date().toLocaleDateString());
+      var tempTag = $("<h2>").text(response.main.temp.toFixed(0) + "\xB0");
       var humidityTag = $("<p>").text("HUMIDITY:  " + response.main.humidity);
       var windSpeedTag = $("<p>").text("WIND:  " + response.wind.speed);
       var imgTag = $("<img>").attr("src", "http://openweathermap.org/img/w/" + response.weather[0].icon + ".png");
 
-      $(".card-body-today").append(dateTag, imgTag, tempTag, humidityTag, windSpeedTag);
-  
+      $(".card-body-today").append(cityToday, dateTag, imgTag, tempTag);
+
+      $(".card-text-today").append(humidityTag, windSpeedTag)
       var lat = response.coord.lat;
       var lon = response.coord.lon;
 
+    // fiveDayForecast(city)
     uvIndex(lat, lon);
       })
   };
@@ -77,9 +81,7 @@ $(document).ready(function(){
           } else {
             uvBtn.addClass("btn-danger");
           }
-          $(".card-body-today").append(uvTag.append(uvBtn));
-
-      fiveDayForecast(city);
+          $(".card-text-today").append(uvTag.append(uvBtn))
     })
   };
   
@@ -94,33 +96,40 @@ $(document).ready(function(){
       console.log(response);
 
       for(var i = 0; i<5; i++){
-        var eachDay = response.list[i].dt;
-          console.log(eachDay);
+        var eachDay = response.list[i].dt; 
         var dateMil = eachDay * 1000;
-        var dateObject = new Date(dateMil);
-          console.log(dateObject);
-        var date = dateObject.toJSON();
-          console.log(date);
-        var dateDis = $("<h3>").text(response.city.name + " " + date.slice(5, 7) + "/" + date.slice(8, 10));  
-            var tempF = (response.list[i].temp.day - 273.15) * 1.80 + 32;
-        var tempDis = $("<h4>").text("Temp: " + tempF.toFixed(0));
-        var imgTag = $("<img>").attr("src", "http://openweathermap.org/img/w/" + response.list[i].weather[0].icon + ".png");
+        var dateObject = new Date(dateMil); 
+        // console.log(dateObject)
+
+
+        var date = dateObject.toString();
+        console.log(date)
+        var dateDis = $("<h2>").text(date.slice(0, 3));  
+
+        var cityDis = $("<p>").text(response.city.name);
         
-        response.list.forEach(function createCard(i){
-          var createCard = ($("<div>"));
-          $(".fiveDayForecast").append(dateDis).append(tempDis).append(imgTag);
-        console.log("done")
-        })
-    // })
-    }
-  })
+        var tempF = (response.list[i].temp.day - 273.15) * 1.80 + 32;
+        var tempDis = $("<h4>").text(tempF.toFixed(0) + "\xB0");
+        
+        var imgTag = $("<img>").attr("src", "http://openweathermap.org/img/w/" + response.list[i].weather[0].icon + ".png");
+
+        // response.list.forEach(function card(){
+          var forecastCard = $(".fiveDayForecast")
+        var createCard = $("<div>").addClass("forecast")
+        
+        createCard.append(dateDis).append(cityDis).append(imgTag).append(tempDis);
+       
+        forecastCard.append(createCard)
+      // })
+        }
+    })
   }})
-    // $(".fiveDayForecast").empty();
+    $(".fiveDayForecast").empty();
   
   
-    // function recallSearch(){
-    //   $("#recent-search-btns").empty();
-    //   localStorage.clear()
-    //   }
+    function recallSearch(){
+      $("#recent-search-btns").empty();
+      localStorage.clear()
+      }
   
   

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Weather Search</h1>
+  <h1 class="header">Weather Search</h1>
 <div class="container">
   <div class="row">
       <input type="text" id="city-input" class="col-md-3">
@@ -17,17 +17,16 @@
 <div class="row">
         <ul class="prev-search-buttons col-md-3">
         </ul>
-    <div class="card-body-today col-md-7">
-      <p class="card-text-today"></p>
+    <div class="card-body-today col-md-3">Today's Weather
     </div>
+    <div class="card-text-today col-md-3">
   </div>
   <br>
-  <div class="fiveDay">
+  <div class="fiveDay container">
     <h2 class="row"> 5-Day Forecast: </h2>
-  <div class="row">
-    <div class="col-md-2 fiveDayForecast"></div>
+  <!-- <div class="row fiveDayForecast"> -->
+    <div class="col-12 fiveDayForecast"></div>
   </div>
-</div>
 </div>
 
   <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
